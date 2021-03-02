@@ -14,11 +14,9 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
-var/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
@@ -127,3 +125,58 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#############
+## Python
+#############
+
+*.py[co]
+
+# Packages
+*.egg
+*.egg-info
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+
+#Translations
+*.mo
+
+#Mr Developer
+.mr.developer.cfg
+
+
+# PyEx stuff
+
+se_normalized/
+logfile
+stdout
+*.out
+*.py#
+#stdout#
+#stdout.old#
+#tmp#
+*.dot
+tmp.txt
+
+#############
+## Vagrant
+#############
+.vagrant
+
+#############
+## PyCharm
+#############
+.idea
