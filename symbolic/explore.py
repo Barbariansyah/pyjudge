@@ -53,18 +53,18 @@ class ExplorationEngine:
 			return self.execution_return_values
 
 		while not self._isExplorationComplete():
-			print('\n')
-			print('\n')
-			print("before====")
-			self._printConstraintsDeque()
-			print("*************")
+			# print('\n')
+			# print('\n')
+			# print("before====")
+			# self._printConstraintsDeque()
+			# print("*************")
 			selected = self.constraints_to_solve.popleft()
-			print("remaining====")
-			print(self.constraints_to_solve)
-			print("*************")
-			print("selected====")
-			print(selected)
-			print("============")
+			# print("remaining====")
+			# print(self.constraints_to_solve)
+			# print("*************")
+			# print("selected====")
+			# print(selected)
+			# print("============")
 			if selected.processed:
 				continue
 			self._setInputs(selected.inputs)			

@@ -48,12 +48,10 @@ print ("Exploring " + app.getFile() + "." + app.getEntry())
 
 result = None
 try:
-	engine = GradingEngine(app.createInvocation(), "z3")
-	generatedInputs, returnVals, path = engine.explore(options.max_iters)
-	print('====RESULT====')
-	print(generatedInputs)
-	print(returnVals)
-	print(path)
+	explorationEngine = ExplorationEngine(app.createInvocation(), "z3")
+	generatedInputs, returnVals, path = explorationEngine.explore(options.max_iters)
+	gradingEngine = GradingEngine(app.createInvocation(), "z3")
+	gradingEngine.grade(generatedInputs, returnVals)
 	# check the result
 	result = app.executionComplete(returnVals)
 

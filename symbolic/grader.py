@@ -43,6 +43,16 @@ class GradingEngine:
 	def addToPathConstraint(self, pred):
 		self.path_constraints.append(pred)
 
+	def grade(self, generated_inputs, execution_return_values):
+		print(generated_inputs)
+		print(execution_return_values)
+		for inp in generated_inputs[1]:
+			self._updateSymbolicParameter(inp[0], inp[1])
+		ret = self.invocation.callFunction(self.symbolic_inputs)
+		self._printPCDeque()
+		print(ret)
+		return
+	
 	def explore(self, max_iterations=0):
 		# print('==============================================')
 		# print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
