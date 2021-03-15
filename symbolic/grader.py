@@ -1,17 +1,15 @@
-# Copyright: see copyright.txt
-
 from collections import deque
 import logging
 import os
 
 from .z3_wrap import Z3Wrapper
-from .path_to_constraint import PathToConstraint
+from .path_constraint import PathConstraint
 from .invocation import FunctionInvocation
 from .symbolic_types import symbolic_type, SymbolicType
 
 log = logging.getLogger("se.conc")
 
-class ExplorationEngine:
+class GradingEngine:
 	def __init__(self, funcinv, solver="z3"):
 		self.invocation = funcinv
 		# the input to the function
@@ -24,8 +22,10 @@ class ExplorationEngine:
 
 		self.constraints_to_solve = deque([])
 		self.num_processed_constraints = 0
+		
+		self.path_constraints = deque([])
 
-		self.path = PathToConstraint(lambda c : self.addConstraint(c))
+		self.path = PathConstraint(lambda c : self.addConstraint(c), lambda p: self.addToPathConstraint(p))
 		# link up SymbolicObject to PathToConstraint in order to intercept control-flow
 		symbolic_type.SymbolicObject.SI = self.path
 
@@ -40,6 +40,9 @@ class ExplorationEngine:
 		# make sure to remember the input that led to this constraint
 		constraint.inputs = self._getInputs()
 
+	def addToPathConstraint(self, pred):
+		self.path_constraints.append(pred)
+
 	def explore(self, max_iterations=0):
 		# print('==============================================')
 		# print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
@@ -53,18 +56,18 @@ class ExplorationEngine:
 			return self.execution_return_values
 
 		while not self._isExplorationComplete():
-			print('\n')
-			print('\n')
-			print("before====")
-			self._printConstraintsDeque()
-			print("*************")
+			# print('\n')
+			# print('\n')
+			# print("before====")
+			# self._printConstraintsDeque()
+			# print("*************")
 			selected = self.constraints_to_solve.popleft()
-			print("remaining====")
-			print(self.constraints_to_solve)
-			print("*************")
-			print("selected====")
-			print(selected)
-			print("============")
+			# print("remaining====")
+			# print(self.constraints_to_solve)
+			# print("*************")
+			# print("selected====")
+			# print(selected)
+			# print("============")
 			if selected.processed:
 				continue
 			self._setInputs(selected.inputs)			
@@ -128,11 +131,19 @@ class ExplorationEngine:
 		self._recordInputs()
 		self.path.reset(expected_path)
 		# print('sym_inp=',self.symbolic_inputs['a'].toString())
+		
 		ret = self.invocation.callFunction(self.symbolic_inputs)
+		self._printPCDeque()
 		print('ret=',ret)
 		self.execution_return_values.append(ret)
+		self.path_constraints.clear()
 
 	def _printConstraintsDeque(self):
 		for i in self.constraints_to_solve:
+			print(i)
+			print('---\n')
+
+	def _printPCDeque(self):
+		for i in self.path_constraints:
 			print(i)
 			print('---\n')

@@ -4,6 +4,7 @@ class Predicate:
 	"""Predicate is one specific ``if'' encountered during the program execution.
 	   """
 	def __init__(self, st, result):
+		# print(st.expr[1].name, st.expr[0], st.expr[2].name, result)
 		self.symtype = st
 		self.result = result
 

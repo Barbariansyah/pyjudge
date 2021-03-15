@@ -21,6 +21,10 @@ class Z3Wrapper(object):
 	def findCounterexample(self, asserts, query):
 		"""Tries to find a counterexample to the query while
 	  	 asserts remains valid."""
+		# print('====Z3======')
+		# print(asserts)
+		# print(query)
+		# print('============')
 		self.solver = Solver()
 		self.query = query
 		self.asserts = self._coneOfInfluence(asserts,query)

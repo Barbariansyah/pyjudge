@@ -6,6 +6,7 @@ from optparse import OptionParser
 
 from symbolic.loader import *
 from symbolic.explore import ExplorationEngine
+from symbolic.grader import GradingEngine
 
 def tracefunc(frame, event, arg, indent=[0]):
       if event == "call":
@@ -36,36 +37,32 @@ if len(args) == 0 or not os.path.exists(args[0]):
 	parser.error("Missing app to execute")
 	sys.exit(1)
 
-print(args)
-
-# solver = "z3"
-
-# filename = os.path.abspath(args[0])
+filename = os.path.abspath(args[0])
 	
-# # Get the object describing the application
-# app = loaderFactory(filename)
-# if app == None:
-# 	sys.exit(1)
+# Get the object describing the application
+app = loaderFactory(filename)
+if app == None:
+	sys.exit(1)
 
-# print ("Exploring " + app.getFile() + "." + app.getEntry())
+print ("Exploring " + app.getFile() + "." + app.getEntry())
 
-# result = None
-# try:
-# 	engine = ExplorationEngine(app.createInvocation(), solver=solver)
-# 	generatedInputs, returnVals, path = engine.explore(options.max_iters)
-# 	print('====RESULT====')
-# 	print(generatedInputs)
-# 	print(returnVals)
-# 	print(path)
-# 	# check the result
-# 	result = app.executionComplete(returnVals)
+result = None
+try:
+	engine = GradingEngine(app.createInvocation(), "z3")
+	generatedInputs, returnVals, path = engine.explore(options.max_iters)
+	print('====RESULT====')
+	print(generatedInputs)
+	print(returnVals)
+	print(path)
+	# check the result
+	result = app.executionComplete(returnVals)
 
-# except ImportError as e:
-# 	# createInvocation can raise this
-# 	logging.error(e)
-# 	sys.exit(1)
+except ImportError as e:
+	# createInvocation can raise this
+	logging.error(e)
+	sys.exit(1)
 
-# if result == None or result == True:
-# 	sys.exit(0);
-# else:
-# 	sys.exit(1);	
+if result == None or result == True:
+	sys.exit(0);
+else:
+	sys.exit(1);	

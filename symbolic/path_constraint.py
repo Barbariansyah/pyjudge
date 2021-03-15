@@ -7,10 +7,11 @@ from .constraint import Constraint
 
 log = logging.getLogger("se.pathconstraint")
 
-class PathToConstraint:
-	def __init__(self, add):
+class PathConstraint:
+	def __init__(self, add, add_pc):
 		self.constraints = {}
 		self.add = add
+		self.add_pc = add_pc
 		self.root_constraint = Constraint(None, None)
 		self.current_constraint = self.root_constraint
 		self.expected_path = None
@@ -36,6 +37,7 @@ class PathToConstraint:
 		p = Predicate(symbolic_type, branch)
 		# print('Predicate:')
 		# print(p)
+		self.add_pc(p)
 		p.negate()
 		# log.debug("negative: %s" % p)
 		cneg = self.current_constraint.findChild(p)

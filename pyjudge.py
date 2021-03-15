@@ -51,6 +51,7 @@ print ("Exploring " + app.getFile() + "." + app.getEntry())
 
 result = None
 try:
+	# get set of inputs for reference and submission
 	engine = ExplorationEngine(app.createInvocation(), solver=solver)
 	generatedInputs, returnVals, path = engine.explore(options.max_iters)
 	print('====RESULT====')
