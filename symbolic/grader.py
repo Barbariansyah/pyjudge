@@ -3,6 +3,7 @@ import logging
 import os
 
 from .z3_wrap import Z3Wrapper
+from .z3_translator import Z3Translator
 from .path_constraint import PathConstraint
 from .invocation import FunctionInvocation
 from .symbolic_types import symbolic_type, SymbolicType
@@ -30,6 +31,7 @@ class GradingEngine:
 		symbolic_type.SymbolicObject.SI = self.path
 
 		self.solver = Z3Wrapper()
+		self.translator = Z3Translator()
 
 		# outputs
 		self.generated_inputs = []
@@ -46,10 +48,11 @@ class GradingEngine:
 	def grade(self, generated_inputs, execution_return_values):
 		print(generated_inputs)
 		print(execution_return_values)
-		for inp in generated_inputs[1]:
+		for inp in generated_inputs[0]:
 			self._updateSymbolicParameter(inp[0], inp[1])
 		ret = self.invocation.callFunction(self.symbolic_inputs)
-		self._printPCDeque()
+		# self._printPCDeque()
+		self.translator.pcToZ3(self.path_constraints)
 		print(ret)
 		return
 	
