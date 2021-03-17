@@ -36,14 +36,25 @@ class Z3Translator(object):
 		return res
 
 	def pcToZ3(self, pc):
+		s = Solver()
 		pc_expression = pc[0].symtype.expr
-		l = Real(pc_expression[1].name)
-		r = Real(pc_expression[2].name)
-		print(pc_expression)
-		print(l>=r)
+		z3_constraint = self.cToZ3(pc[0])
+		print(z3_constraint)
+		s.add(z3_constraint)
 		return
 	# private
 
+	def cToZ3(self, c):
+		pc_expr = c.symtype.expr
+		sym = pc_expr[0]
+		l = Real(pc_expr[1].name)
+		r = Real(pc_expr[2].name)
+		if c.result:
+			if sym == '>=':
+				return l>=r
+		else:
+			return
+		
 	# this is very inefficient
 	def _coneOfInfluence(self,asserts,query):
 		cone = []
