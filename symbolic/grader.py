@@ -51,7 +51,7 @@ class GradingEngine:
 		for inp in generated_inputs[0]:
 			self._updateSymbolicParameter(inp[0], inp[1])
 		ret = self.invocation.callFunction(self.symbolic_inputs)
-		# self._printPCDeque()
+		self._printPCDeque()
 		self.translator.pcToZ3(self.path_constraints)
 		print(ret)
 		return

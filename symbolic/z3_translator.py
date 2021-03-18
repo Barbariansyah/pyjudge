@@ -7,6 +7,7 @@ import logging
 from z3 import *
 from .z3_expr.integer import Z3Integer
 from .z3_expr.bitvector import Z3BitVector
+from .symbolic_types.symbolic_int import SymbolicInteger
 
 log = logging.getLogger("se.z3")
 
@@ -38,22 +39,79 @@ class Z3Translator(object):
 	def pcToZ3(self, pc):
 		s = Solver()
 		pc_expression = pc[0].symtype.expr
-		z3_constraint = self.cToZ3(pc[0])
+		pc_res = pc[0].result
+		print(pc_expression)
+		z3_constraint = self.cToZ3(pc_expression, pc_res)
 		print(z3_constraint)
 		s.add(z3_constraint)
 		return
 	# private
 
-	def cToZ3(self, c):
-		pc_expr = c.symtype.expr
-		sym = pc_expr[0]
-		l = Real(pc_expr[1].name)
-		r = Real(pc_expr[2].name)
-		if c.result:
-			if sym == '>=':
-				return l>=r
-		else:
-			return
+	def cToZ3(self, expr, res):
+		if isinstance(expr, list):
+			op = expr[0]
+			args = [ self.cToZ3(a, res) for a in expr[1:] ]
+			z3_l,z3_r = args[0],args[1]
+
+			# arithmetical operations
+			if op == "+":
+				return z3_l + z3_r
+			elif op == "-":
+				return z3_l - z3_r
+			elif op == "*":
+				return z3_l * z3_r
+			elif op == "//":
+				return z3_l // z3_r
+			elif op == "%":
+				return z3_l % z3_r
+
+			# bitwise
+			elif op == "<<":
+				return z3_l << z3_r
+			elif op == ">>":
+				return z3_l >> z3_r
+			elif op == "^":
+				return z3_l ^ z3_r
+			elif op == "|":
+				return z3_l | z3_r
+			elif op == "&":
+				return z3_l & z3_r
+
+			# equality gets coerced to integer
+			if res:
+				if op == "==":
+					return z3_l == z3_r
+				elif op == "!=":
+					return z3_l != z3_r
+				elif op == "<":
+					return z3_l < z3_r
+				elif op == ">":
+					return z3_l > z3_r
+				elif op == "<=":
+					return z3_l <= z3_r
+				elif op == ">=":
+					return z3_l >= z3_r
+				else:
+					utils.crash("Unknown BinOp during conversion from ast to Z3 (expressions): %s" % op)
+			else:
+				if op == "==":
+					return z3_l != z3_r
+				elif op == "!=":
+					return z3_l == z3_r
+				elif op == "<":
+					return z3_l >= z3_r
+				elif op == ">":
+					return z3_l <= z3_r
+				elif op == "<=":
+					return z3_l > z3_r
+				elif op == ">=":
+					return z3_l < z3_r
+				else:
+					utils.crash("Unknown BinOp during conversion from ast to Z3 (expressions): %s" % op)
+
+		elif isinstance(expr, SymbolicInteger):
+			return Real(expr.name)
+
 		
 	# this is very inefficient
 	def _coneOfInfluence(self,asserts,query):
