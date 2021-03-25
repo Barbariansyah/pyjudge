@@ -37,14 +37,17 @@ class Z3Translator(object):
 		return res
 
 	def pcToZ3(self, pc):
-		s = Solver()
-		pc_expression = pc[0].symtype.expr
-		pc_res = pc[0].result
-		print(pc_expression)
-		z3_constraint = self.cToZ3(pc_expression, pc_res)
-		print(z3_constraint)
-		s.add(z3_constraint)
-		return
+		pcInZ3 = []
+		# print('pc')
+		# print(pc)
+		for pc_item in pc:
+			pc_expression = pc_item.symtype.expr
+			pc_res = pc_item.result
+			# print(pc_expression)
+			z3_constraint = self.cToZ3(pc_expression, pc_res)
+			# print(z3_constraint)
+			pcInZ3.append(z3_constraint)
+		return pcInZ3
 	# private
 
 	def cToZ3(self, expr, res):

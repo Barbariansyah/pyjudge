@@ -53,7 +53,7 @@ class GradingEngine:
 		ret = self.invocation.callFunction(self.symbolic_inputs)
 		self._printPCDeque()
 		self.translator.pcToZ3(self.path_constraints)
-		print(ret)
+		# print(ret)
 		return
 	
 	def explore(self, max_iterations=0):
