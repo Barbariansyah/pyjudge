@@ -50,38 +50,45 @@ class GradingEngine:
 	def grade(self, generated_inputs, execution_return_values):
 		print(generated_inputs)
 		print(execution_return_values)
-		pc, pcStudent = self.execute_program(generated_inputs[0])
+		pc, pcStudent, ret, retStudent = self.execute_program(generated_inputs[0])
 		print(pc)
 		print(pcStudent)
 		pathDeviationForm = self.formula_builder(pc, pcStudent, 'path_deviation')
-		print(pathDeviationForm)
-		s = Solver()
-		s.add(pathDeviationForm)
-		print(s)
-		print(s.check())
-		print(s.model())
-		x = self.translator.modelToInp(s.model())
-		print(x)
+		sat, res = self.z3_solve(pathDeviationForm)
+		pc, pcStudent, ret, retStudent = self.execute_program(res)
+		print(pc)
+		print(pcStudent)
 		return
 	
 	def execute_program(self, sym_inp):
 		for inp in sym_inp:
-			print(type(inp[0]))
-			print(type(inp[1]))
 			self._updateSymbolicParameter(inp[0], inp[1])
 		ret = self.invocation.callFunction(self.symbolic_inputs)
 		self._printPCDeque()
 		pc = self.translator.pcToZ3(self.path_constraints)
 		self.path_constraints = deque([])
-		ret = self.invocationStudent.callFunction(self.symbolic_inputs)
+		retStudent = self.invocationStudent.callFunction(self.symbolic_inputs)
 		self._printPCDeque()
 		pcStudent = self.translator.pcToZ3(self.path_constraints)
 		self.path_constraints = deque([])
-		return And(pc), And(pcStudent)
+		# ret is SymbolicInteger
+		# ret.name
+		# ret.val
+		return And(pc), And(pcStudent), ret, retStudent
 
 	def formula_builder(self, a, b, formula):
 		if formula == 'path_deviation':
 			return Or(And(a, Not(b)), And(b, Not(a)))
+
+	def z3_solve(self, formula):
+		s = Solver()
+		s.add(formula)
+		sat = s.check()
+		print(s)
+		print(s.check())
+		print(s.model())
+		res = self.translator.modelToInp(s.model())
+		return sat, res
 
 	def explore(self, max_iterations=0):
 		# print('==============================================')

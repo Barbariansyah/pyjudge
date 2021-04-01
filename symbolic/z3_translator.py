@@ -119,7 +119,7 @@ class Z3Translator(object):
 		length = len(m)
 		return_input = []
 		for i in range(length):
-			return_input.append((m[i].name(), m[m[i]]))
+			return_input.append((m[i].name(), int(m[m[i]].as_decimal(0))))
 		return return_input
 
 	# this is very inefficient
