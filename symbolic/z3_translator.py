@@ -115,7 +115,13 @@ class Z3Translator(object):
 		elif isinstance(expr, SymbolicInteger):
 			return Real(expr.name)
 
-		
+	def modelToInp(self, m):
+		length = len(m)
+		return_input = []
+		for i in range(length):
+			return_input.append((m[i].name(), m[m[i]]))
+		return return_input
+
 	# this is very inefficient
 	def _coneOfInfluence(self,asserts,query):
 		cone = []

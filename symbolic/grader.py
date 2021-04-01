@@ -55,16 +55,19 @@ class GradingEngine:
 		print(pcStudent)
 		pathDeviationForm = self.formula_builder(pc, pcStudent, 'path_deviation')
 		print(pathDeviationForm)
-		# x = And(And(pc), And(pcStudent))
-		# s = Solver()
-		# s.add(pathDeviationForm)
-		# print(s)
-		# print(s.check())
-		# print(s.model())
+		s = Solver()
+		s.add(pathDeviationForm)
+		print(s)
+		print(s.check())
+		print(s.model())
+		x = self.translator.modelToInp(s.model())
+		print(x)
 		return
 	
 	def execute_program(self, sym_inp):
 		for inp in sym_inp:
+			print(type(inp[0]))
+			print(type(inp[1]))
 			self._updateSymbolicParameter(inp[0], inp[1])
 		ret = self.invocation.callFunction(self.symbolic_inputs)
 		self._printPCDeque()
@@ -79,7 +82,6 @@ class GradingEngine:
 	def formula_builder(self, a, b, formula):
 		if formula == 'path_deviation':
 			return Or(And(a, Not(b)), And(b, Not(a)))
-
 
 	def explore(self, max_iterations=0):
 		# print('==============================================')
