@@ -49,22 +49,24 @@ class GradingEngine:
 	def grade(self, generated_inputs, execution_return_values):
 		print(generated_inputs)
 		print(execution_return_values)
-		for inp in generated_inputs[0]:
-			self._updateSymbolicParameter(inp[0], inp[1])
-		ret = self.invocation.callFunction(self.symbolic_inputs)
-		self._printPCDeque()
-		pc = self.translator.pcToZ3(self.path_constraints)
+		pc, pcStudent = self.execute_program(generated_inputs[0])
 		print(pc)
-		self.path_constraints = deque([])
-		for inp in generated_inputs[1]:
-			self._updateSymbolicParameter(inp[0], inp[1])
-		ret = self.invocation.callFunction(self.symbolic_inputs)
-		self._printPCDeque()
-		pc = self.translator.pcToZ3(self.path_constraints)
-		print(pc)
-		# print(ret)
+		print(pcStudent)
 		return
 	
+	def execute_program(self, sym_inp):
+		for inp in sym_inp:
+			self._updateSymbolicParameter(inp[0], inp[1])
+		ret = self.invocation.callFunction(self.symbolic_inputs)
+		self._printPCDeque()
+		pc = self.translator.pcToZ3(self.path_constraints)
+		self.path_constraints = deque([])
+		ret = self.invocationStudent.callFunction(self.symbolic_inputs)
+		self._printPCDeque()
+		pcStudent = self.translator.pcToZ3(self.path_constraints)
+		self.path_constraints = deque([])
+		return pc, pcStudent
+
 	def explore(self, max_iterations=0):
 		# print('==============================================')
 		# print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
