@@ -15,6 +15,7 @@ n2 = (t3, t2)
 arr = [t, t2]
 arr2 = [t3]
 y = Or(And(n), Not(And(n2)))
+# x = Or(And(a, Not(b)), And(b, Not(a)))
 s.add(y)
 print(n)
 print(type(n))

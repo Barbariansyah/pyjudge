@@ -7,6 +7,7 @@ from .z3_translator import Z3Translator
 from .path_constraint import PathConstraint
 from .invocation import FunctionInvocation
 from .symbolic_types import symbolic_type, SymbolicType
+from z3 import *
 
 log = logging.getLogger("se.conc")
 
@@ -52,6 +53,14 @@ class GradingEngine:
 		pc, pcStudent = self.execute_program(generated_inputs[0])
 		print(pc)
 		print(pcStudent)
+		pathDeviationForm = self.formula_builder(pc, pcStudent, 'path_deviation')
+		print(pathDeviationForm)
+		# x = And(And(pc), And(pcStudent))
+		# s = Solver()
+		# s.add(pathDeviationForm)
+		# print(s)
+		# print(s.check())
+		# print(s.model())
 		return
 	
 	def execute_program(self, sym_inp):
@@ -65,7 +74,12 @@ class GradingEngine:
 		self._printPCDeque()
 		pcStudent = self.translator.pcToZ3(self.path_constraints)
 		self.path_constraints = deque([])
-		return pc, pcStudent
+		return And(pc), And(pcStudent)
+
+	def formula_builder(self, a, b, formula):
+		if formula == 'path_deviation':
+			return Or(And(a, Not(b)), And(b, Not(a)))
+
 
 	def explore(self, max_iterations=0):
 		# print('==============================================')
