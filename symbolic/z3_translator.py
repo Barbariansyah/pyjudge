@@ -37,7 +37,7 @@ class Z3Translator(object):
 		return res
 
 	def pcToZ3(self, pc):
-		pcInZ3 = []
+		pcInZ3 = ()
 		# print('pc')
 		# print(pc)
 		for pc_item in pc:
@@ -46,7 +46,7 @@ class Z3Translator(object):
 			# print(pc_expression)
 			z3_constraint = self.cToZ3(pc_expression, pc_res)
 			# print(z3_constraint)
-			pcInZ3.append(z3_constraint)
+			pcInZ3+= (z3_constraint,)
 		return pcInZ3
 	# private
 

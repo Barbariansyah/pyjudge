@@ -38,19 +38,28 @@ if len(args) == 0 or not os.path.exists(args[0]):
 	sys.exit(1)
 
 filename = os.path.abspath(args[0])
+filenameStudent = os.path.abspath(args[1])
 	
 # Get the object describing the application
 app = loaderFactory(filename)
-if app == None:
+appStudent = loaderFactory(filenameStudent)
+if app == None or appStudent == None:
 	sys.exit(1)
 
-print ("Exploring " + app.getFile() + "." + app.getEntry())
+print ("Reference: " + app.getFile() + "." + app.getEntry())
+print ("Grading: " + appStudent.getFile() + "." + appStudent.getEntry())
+
 
 result = None
 try:
 	explorationEngine = ExplorationEngine(app.createInvocation(), "z3")
 	generatedInputs, returnVals, path = explorationEngine.explore(options.max_iters)
-	gradingEngine = GradingEngine(app.createInvocation(), "z3")
+	explorationEngineStudent = ExplorationEngine(appStudent.createInvocation(), "z3")
+	generatedInputsStudent, returnValsStudent, pathStudent = explorationEngineStudent.explore(options.max_iters)
+
+	generatedInputs += generatedInputsStudent
+	returnVals += returnValsStudent
+	gradingEngine = GradingEngine(app.createInvocation(), appStudent.createInvocation(), "z3")
 	gradingEngine.grade(generatedInputs, returnVals)
 	# check the result
 	result = app.executionComplete(returnVals)

@@ -9,11 +9,12 @@ s = Solver()
 t = a>b
 t2 = b>c
 t3 = d>e
-n = (t, t2)
+n = (t,)
+n += (t2,)
 n2 = (t3, t2)
 arr = [t, t2]
 arr2 = [t3]
-y = Or(And(n), And(n2))
+y = Or(And(n), Not(And(n2)))
 s.add(y)
 print(n)
 print(type(n))

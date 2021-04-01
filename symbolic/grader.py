@@ -11,8 +11,9 @@ from .symbolic_types import symbolic_type, SymbolicType
 log = logging.getLogger("se.conc")
 
 class GradingEngine:
-	def __init__(self, funcinv, solver="z3"):
+	def __init__(self, funcinv, funcinvStudent, solver="z3"):
 		self.invocation = funcinv
+		self.invocationStudent = funcinvStudent
 		# the input to the function
 		self.symbolic_inputs = {}  # string -> SymbolicType
 		# initialize
@@ -52,7 +53,15 @@ class GradingEngine:
 			self._updateSymbolicParameter(inp[0], inp[1])
 		ret = self.invocation.callFunction(self.symbolic_inputs)
 		self._printPCDeque()
-		self.translator.pcToZ3(self.path_constraints)
+		pc = self.translator.pcToZ3(self.path_constraints)
+		print(pc)
+		self.path_constraints = deque([])
+		for inp in generated_inputs[1]:
+			self._updateSymbolicParameter(inp[0], inp[1])
+		ret = self.invocation.callFunction(self.symbolic_inputs)
+		self._printPCDeque()
+		pc = self.translator.pcToZ3(self.path_constraints)
+		print(pc)
 		# print(ret)
 		return
 	
