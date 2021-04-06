@@ -51,13 +51,13 @@ class GradingEngine:
 		print(generated_inputs)
 		print(execution_return_values)
 		pc, pcStudent, ret, retStudent = self.execute_program(generated_inputs[0])
-		print(pc)
-		print(pcStudent)
-		pathDeviationForm = self.formula_builder(pc, pcStudent, 'path_deviation')
+		pathDeviationForm = self.path_deviation_builder(pc, pcStudent)
 		sat, res = self.z3_solve(pathDeviationForm)
 		pc, pcStudent, ret, retStudent = self.execute_program(res)
-		print(pc)
-		print(pcStudent)
+		retSym = self.translator.symToZ3(ret.name)
+		retStudentSym = self.translator.symToZ3(retStudent.name)
+		pathEquivalenceForm = self.path_equivalence_builder(pc, pcStudent, retSym, retStudentSym)
+		sat, res = self.z3_solve(pathEquivalenceForm)
 		return
 	
 	def execute_program(self, sym_inp):
@@ -76,19 +76,24 @@ class GradingEngine:
 		# ret.val
 		return And(pc), And(pcStudent), ret, retStudent
 
-	def formula_builder(self, a, b, formula):
-		if formula == 'path_deviation':
-			return Or(And(a, Not(b)), And(b, Not(a)))
+	def path_deviation_builder(self, a, b):
+		return Or(And(a, Not(b)), And(b, Not(a)))
+
+	def path_equivalence_builder(self, a, b, oa, ob):
+		return And(oa!=ob, And(a, b))
 
 	def z3_solve(self, formula):
 		s = Solver()
 		s.add(formula)
 		sat = s.check()
-		print(s)
-		print(s.check())
-		print(s.model())
-		res = self.translator.modelToInp(s.model())
-		return sat, res
+		# print(s)
+		# print(s.check())
+		# print(s.model())
+		if repr(sat) == 'sat':
+			res = self.translator.modelToInp(s.model())
+			return 'sat', res
+		else:
+			return 'unsat', None
 
 	def explore(self, max_iterations=0):
 		# print('==============================================')

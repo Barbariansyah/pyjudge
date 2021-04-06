@@ -115,6 +115,9 @@ class Z3Translator(object):
 		elif isinstance(expr, SymbolicInteger):
 			return Real(expr.name)
 
+	def symToZ3(self, sym_str):
+		return Real(sym_str)
+
 	def modelToInp(self, m):
 		length = len(m)
 		return_input = []
