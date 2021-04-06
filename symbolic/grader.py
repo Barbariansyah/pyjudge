@@ -50,24 +50,44 @@ class GradingEngine:
 	def grade(self, generated_inputs, execution_return_values):
 		print(generated_inputs)
 		print(execution_return_values)
-		pc, pcStudent, ret, retStudent = self.execute_program(generated_inputs[0])
-		pathDeviationForm = self.path_deviation_builder(pc, pcStudent)
-		sat, res = self.z3_solve(pathDeviationForm)
-		pc, pcStudent, ret, retStudent = self.execute_program(res)
-		retSym = self.translator.symToZ3(ret.name)
-		retStudentSym = self.translator.symToZ3(retStudent.name)
-		pathEquivalenceForm = self.path_equivalence_builder(pc, pcStudent, retSym, retStudentSym)
-		sat, res = self.z3_solve(pathEquivalenceForm)
-		return
+		for generated_input in generated_inputs:
+			pc, pcStudent, ret, retStudent = self.execute_program(generated_input)
+			if ret.val != retStudent.val:
+				print(ret.val)
+				print(retStudent.val)
+				print('implementation is incorrect')
+				return False
+			pathDeviationForm = self.path_deviation_builder(pc, pcStudent)
+			sat, res = self.z3_solve(pathDeviationForm)
+			if sat != 'sat':
+				print('no path deviation, skipping...')
+				continue
+			pc, pcStudent, ret, retStudent = self.execute_program(res)
+			if ret.val != retStudent.val:
+				print(ret.val)
+				print(retStudent.val)
+				print('implementation is incorrect')
+				return False
+			retSym = self.translator.symToZ3(ret.name)
+			retStudentSym = self.translator.symToZ3(retStudent.name)
+			pathEquivalenceForm = self.path_equivalence_builder(pc, pcStudent, retSym, retStudentSym)
+			sat, res = self.z3_solve(pathEquivalenceForm)
+			if sat != 'sat':
+				print('path is equivalent, skipping...')
+				continue
+		return True
 	
 	def execute_program(self, sym_inp):
+		print(sym_inp)
 		for inp in sym_inp:
 			self._updateSymbolicParameter(inp[0], inp[1])
 		ret = self.invocation.callFunction(self.symbolic_inputs)
+		print('ret: '+str(ret.val))
 		self._printPCDeque()
 		pc = self.translator.pcToZ3(self.path_constraints)
 		self.path_constraints = deque([])
 		retStudent = self.invocationStudent.callFunction(self.symbolic_inputs)
+		print('retStudetn: '+str(retStudent.val))
 		self._printPCDeque()
 		pcStudent = self.translator.pcToZ3(self.path_constraints)
 		self.path_constraints = deque([])
