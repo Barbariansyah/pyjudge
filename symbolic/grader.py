@@ -51,6 +51,7 @@ class GradingEngine:
 		print(generated_inputs)
 		print(execution_return_values)
 		for generated_input in generated_inputs:
+			print('from set: ')
 			pc, pcStudent, ret, retStudent = self.execute_program(generated_input)
 			if ret.val != retStudent.val:
 				print(ret.val)
@@ -62,6 +63,7 @@ class GradingEngine:
 			if sat != 'sat':
 				print('no path deviation, skipping...')
 				continue
+			print('from path dev: ')
 			pc, pcStudent, ret, retStudent = self.execute_program(res)
 			if ret.val != retStudent.val:
 				print(ret.val)
@@ -73,7 +75,7 @@ class GradingEngine:
 			pathEquivalenceForm = self.path_equivalence_builder(pc, pcStudent, retSym, retStudentSym)
 			sat, res = self.z3_solve(pathEquivalenceForm)
 			if sat != 'sat':
-				print('path is equivalent, skipping...')
+				# print('path is equivalent, skipping...')
 				continue
 		return True
 	
@@ -83,12 +85,12 @@ class GradingEngine:
 			self._updateSymbolicParameter(inp[0], inp[1])
 		ret = self.invocation.callFunction(self.symbolic_inputs)
 		print('ret: '+str(ret.val))
-		self._printPCDeque()
+		# self._printPCDeque()
 		pc = self.translator.pcToZ3(self.path_constraints)
 		self.path_constraints = deque([])
 		retStudent = self.invocationStudent.callFunction(self.symbolic_inputs)
-		print('retStudetn: '+str(retStudent.val))
-		self._printPCDeque()
+		print('retStudent: '+str(retStudent.val))
+		# self._printPCDeque()
 		pcStudent = self.translator.pcToZ3(self.path_constraints)
 		self.path_constraints = deque([])
 		# ret is SymbolicInteger
