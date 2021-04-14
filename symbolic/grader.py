@@ -7,6 +7,7 @@ from .z3_translator import Z3Translator
 from .path_constraint import PathConstraint
 from .invocation import FunctionInvocation
 from .symbolic_types import symbolic_type, SymbolicType
+from .symbolic_types.symbolic_int import SymbolicInteger
 from z3 import *
 
 log = logging.getLogger("se.conc")
@@ -59,7 +60,7 @@ class GradingEngine:
 			# 	print(ret.val)
 			# 	print(retStudent.val)
 			# 	print('implementation is incorrect')
-			self.add_to_tested(generated_input, ret.val, retStudent.val)
+			self.add_to_tested(generated_input, ret, retStudent)
 			pathDeviationForm = self.path_deviation_builder(pc, pcStudent)
 			sat, res = self.z3_solve(pathDeviationForm)
 			if sat != 'sat':
@@ -71,7 +72,9 @@ class GradingEngine:
 			# 	print(ret.val)
 			# 	print(retStudent.val)
 			# 	print('implementation is incorrect')
-			self.add_to_tested(res, ret.val, retStudent.val)
+			self.add_to_tested(res, ret, retStudent)
+			if not isinstance(ret, SymbolicInteger) or not isinstance(retStudent, SymbolicInteger):
+				continue
 			retSym = self.translator.symToZ3(ret.name)
 			retStudentSym = self.translator.symToZ3(retStudent.name)
 			pathEquivalenceForm = self.path_equivalence_builder(pc, pcStudent, retSym, retStudentSym)
@@ -85,10 +88,14 @@ class GradingEngine:
 			# 	print(ret.val)
 			# 	print(retStudent.val)
 			# 	print('implementation is incorrect')
-			self.add_to_tested(res, ret.val, retStudent.val)
+			self.add_to_tested(res, ret, retStudent)
 		return self.tested_case, self.wrong_case
 	
 	def add_to_tested(self, case, output_ref, output_stud):
+		if isinstance(output_ref, SymbolicInteger):
+			output_ref = output_ref.val
+		if isinstance(output_stud, SymbolicInteger):
+			output_stud = output_stud.val
 		if tuple(sorted(case)) in self.tested_case:
 			pass
 		if output_ref == output_stud:
