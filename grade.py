@@ -61,7 +61,12 @@ try:
 	returnVals += returnValsStudent
 	gradingEngine = GradingEngine(app.createInvocation(), appStudent.createInvocation(), "z3")
 	tested_case, wrong_case = gradingEngine.grade(generatedInputs, returnVals)
+	print('======')
+	print('RESULT')
+	print('======')
+	print('\ntested: ')
 	print(tested_case)
+	print('\nwrong: ')
 	print(wrong_case)
 	# check the result
 	result = app.executionComplete(returnVals)
