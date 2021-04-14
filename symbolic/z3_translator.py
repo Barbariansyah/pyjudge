@@ -115,6 +115,9 @@ class Z3Translator(object):
 		elif isinstance(expr, SymbolicInteger):
 			return Real(expr.name)
 
+		elif isinstance(expr, int):
+			return IntVal(expr)
+
 	def symToZ3(self, sym_str):
 		return Real(sym_str)
 
