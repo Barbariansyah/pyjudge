@@ -13,6 +13,8 @@ log = logging.getLogger("se.conc")
 
 class GradingEngine:
 	def __init__(self, funcinv, funcinvStudent, solver="z3"):
+		self.tested_case = {}
+		self.wrong_case = {}
 		self.invocation = funcinv
 		self.invocationStudent = funcinvStudent
 		# the input to the function
@@ -57,7 +59,7 @@ class GradingEngine:
 				print(ret.val)
 				print(retStudent.val)
 				print('implementation is incorrect')
-				return False
+			self.add_to_tested(generated_input, ret.val, retStudent.val)
 			pathDeviationForm = self.path_deviation_builder(pc, pcStudent)
 			sat, res = self.z3_solve(pathDeviationForm)
 			if sat != 'sat':
@@ -69,27 +71,43 @@ class GradingEngine:
 				print(ret.val)
 				print(retStudent.val)
 				print('implementation is incorrect')
-				return False
+			self.add_to_tested(res, ret.val, retStudent.val)
 			retSym = self.translator.symToZ3(ret.name)
 			retStudentSym = self.translator.symToZ3(retStudent.name)
 			pathEquivalenceForm = self.path_equivalence_builder(pc, pcStudent, retSym, retStudentSym)
 			sat, res = self.z3_solve(pathEquivalenceForm)
 			if sat != 'sat':
-				# print('path is equivalent, skipping...')
+				print('path is equivalent, skipping...')
 				continue
-		return True
+			print('from path equiv: ')
+			pc, pcStudent, ret, retStudent = self.execute_program(res)
+			if ret.val != retStudent.val:
+				print(ret.val)
+				print(retStudent.val)
+				print('implementation is incorrect')
+			self.add_to_tested(res, ret.val, retStudent.val)
+		return self.tested_case, self.wrong_case
+	
+	def add_to_tested(self, case, output_ref, output_stud):
+		if tuple(sorted(case)) in self.tested_case:
+			pass
+		if output_ref == output_stud:
+			self.tested_case[tuple(sorted(case))] = (output_ref, output_stud)
+		else:
+			self.tested_case[tuple(sorted(case))] = (output_ref, output_stud)
+			self.wrong_case[tuple(sorted(case))] = (output_ref, output_stud)
 	
 	def execute_program(self, sym_inp):
 		print(sym_inp)
 		for inp in sym_inp:
 			self._updateSymbolicParameter(inp[0], inp[1])
 		ret = self.invocation.callFunction(self.symbolic_inputs)
-		print('ret: '+str(ret.val))
+		# print('ret: '+str(ret.val))
 		# self._printPCDeque()
 		pc = self.translator.pcToZ3(self.path_constraints)
 		self.path_constraints = deque([])
 		retStudent = self.invocationStudent.callFunction(self.symbolic_inputs)
-		print('retStudent: '+str(retStudent.val))
+		# print('retStudent: '+str(retStudent.val))
 		# self._printPCDeque()
 		pcStudent = self.translator.pcToZ3(self.path_constraints)
 		self.path_constraints = deque([])

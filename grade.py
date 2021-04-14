@@ -60,7 +60,9 @@ try:
 	generatedInputs += generatedInputsStudent
 	returnVals += returnValsStudent
 	gradingEngine = GradingEngine(app.createInvocation(), appStudent.createInvocation(), "z3")
-	gradingEngine.grade(generatedInputs, returnVals)
+	tested_case, wrong_case = gradingEngine.grade(generatedInputs, returnVals)
+	print(tested_case)
+	print(wrong_case)
 	# check the result
 	result = app.executionComplete(returnVals)
 
