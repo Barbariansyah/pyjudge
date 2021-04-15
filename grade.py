@@ -68,6 +68,9 @@ try:
 	print(tested_case)
 	print('\nwrong: ')
 	print(wrong_case)
+	print('\ngrade: ')
+	final_grade = (len(tested_case) - len(wrong_case)) / len(tested_case) * 100
+	print(str(final_grade)+'%')
 	# check the result
 	result = app.executionComplete(returnVals)
 
