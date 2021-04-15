@@ -124,6 +124,7 @@ class Z3Translator(object):
 	def modelToInp(self, m):
 		length = len(m)
 		return_input = []
+		# print(m)
 		for i in range(length):
 			return_input.append((m[i].name(), int(m[m[i]].as_decimal(0))))
 		return return_input

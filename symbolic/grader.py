@@ -136,6 +136,7 @@ class GradingEngine:
 		# print(s)
 		# print(s.check())
 		# print(s.model())
+		# print(formula)
 		if repr(sat) == 'sat':
 			res = self.translator.modelToInp(s.model())
 			return 'sat', res
