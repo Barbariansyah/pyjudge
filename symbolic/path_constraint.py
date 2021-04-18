@@ -50,7 +50,7 @@ class PathConstraint:
 			# print('whichBranch:')
 			# print(c)
 			# we add the new constraint to the queue of the engine for later processing
-			log.debug("New constraint: %s" % c)
+			# log.debug("New constraint: %s" % c)
 			self.add(c)
 			
 		# check for path mismatch
