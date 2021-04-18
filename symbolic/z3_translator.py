@@ -113,20 +113,20 @@ class Z3Translator(object):
 					utils.crash("Unknown BinOp during conversion from ast to Z3 (expressions): %s" % op)
 
 		elif isinstance(expr, SymbolicInteger):
-			return Real(expr.name)
+			return Int(expr.name)
 
 		elif isinstance(expr, int):
 			return IntVal(expr)
 
 	def symToZ3(self, sym_str):
-		return Real(sym_str)
+		return Int(sym_str)
 
 	def modelToInp(self, m):
 		length = len(m)
 		return_input = []
 		# print(m)
 		for i in range(length):
-			return_input.append((m[i].name(), int(m[m[i]].as_decimal(0))))
+			return_input.append((m[i].name(), int(m[m[i]].as_string())))
 		return return_input
 
 	# this is very inefficient
