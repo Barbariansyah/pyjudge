@@ -20,6 +20,7 @@ class GradingEngine:
 		self.invocationStudent = funcinvStudent
 		# the input to the function
 		self.symbolic_inputs = {}  # string -> SymbolicType
+		self.default_input = []
 		# initialize
 		for n in funcinv.getNames():
 			self.symbolic_inputs[n] = funcinv.createArgumentValue(n)
@@ -53,6 +54,7 @@ class GradingEngine:
 	def grade(self, generated_inputs, execution_return_values):
 		print(generated_inputs)
 		print(execution_return_values)
+		self.default_input = generated_inputs[0][:]
 		for generated_input in generated_inputs:
 			# print('from set: ')
 			pc, pcStudent, ret, retStudent = self.execute_program(generated_input)
@@ -133,15 +135,30 @@ class GradingEngine:
 		s = Solver()
 		s.add(formula)
 		sat = s.check()
-		# print(s)
 		# print(s.check())
 		# print(s.model())
-		# print(formula)
 		if repr(sat) == 'sat':
 			res = self.translator.modelToInp(s.model())
+			res = self.fill_default(res)
 			return 'sat', res
 		else:
 			return 'unsat', None
+	
+	def fill_default(self, res):
+		new_res = res[:]
+		# print(self.default_input)
+		# print(new_res)
+		for i in self.default_input:
+			found = False
+			for j in new_res:
+				# print(i, j)
+				if i[0] == j[0]:
+					# print(i, j)
+					found = True
+					break
+			if not found:
+				new_res.append(i)
+		return new_res
 
 	def explore(self, max_iterations=0):
 		# print('==============================================')
