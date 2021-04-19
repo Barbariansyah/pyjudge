@@ -122,14 +122,14 @@ class ExplorationEngine:
 		args = self.symbolic_inputs
 		inputs = [ (k,self._getConcrValue(args[k])) for k in args ]
 		self.generated_inputs.append(inputs)
-		print('inp=',inputs)
+		# print('inp=',inputs)
 		
 	def _oneExecution(self,expected_path=None):
 		self._recordInputs()
 		self.path.reset(expected_path)
 		# print('sym_inp=',self.symbolic_inputs['a'].toString())
 		ret = self.invocation.callFunction(self.symbolic_inputs)
-		print('ret=',ret)
+		# print('ret=',ret)
 		self.execution_return_values.append(ret)
 
 	def _printConstraintsDeque(self):

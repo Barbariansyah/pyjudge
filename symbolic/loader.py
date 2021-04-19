@@ -29,7 +29,7 @@ class Loader:
 		inv = FunctionInvocation(self._execute,self._resetCallback)
 		func = self.app.__dict__[self._entryPoint]
 		argspec = inspect.getargspec(func)
-		print('\n',argspec)
+		# print('\n',argspec)
 		# check to see if user specified initial values of arguments
 		if "concrete_args" in func.__dict__:
 			for (f,v) in func.concrete_args.items():

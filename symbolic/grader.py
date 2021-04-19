@@ -52,8 +52,8 @@ class GradingEngine:
 		self.path_constraints.append(pred)
 
 	def grade(self, generated_inputs, execution_return_values):
-		print(generated_inputs)
-		print(execution_return_values)
+		# print(generated_inputs)
+		# print(execution_return_values)
 		self.default_input = generated_inputs[0][:]
 		for generated_input in generated_inputs:
 			# print('from set: ')
