@@ -100,10 +100,8 @@ class GradingEngine:
 			output_stud = output_stud.val
 		if tuple(sorted(case)) in self.tested_case:
 			pass
-		if output_ref == output_stud:
-			self.tested_case[tuple(sorted(case))] = (output_ref, output_stud)
-		else:
-			self.tested_case[tuple(sorted(case))] = (output_ref, output_stud)
+		self.tested_case[tuple(sorted(case))] = (output_ref, output_stud)
+		if output_ref != output_stud:
 			self.wrong_case[tuple(sorted(case))] = (output_ref, output_stud)
 	
 	def execute_program(self, sym_inp):

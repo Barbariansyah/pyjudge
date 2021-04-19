@@ -56,18 +56,31 @@ try:
 	generatedInputs, returnVals, path = explorationEngine.explore(options.max_iters)
 	explorationEngineStudent = ExplorationEngine(appStudent.createInvocation(), "z3")
 	generatedInputsStudent, returnValsStudent, pathStudent = explorationEngineStudent.explore(options.max_iters)
-
 	generatedInputs += generatedInputsStudent
 	returnVals += returnValsStudent
 	gradingEngine = GradingEngine(app.createInvocation(), appStudent.createInvocation(), "z3")
 	tested_case, wrong_case = gradingEngine.grade(generatedInputs, returnVals)
+	
+	tested_case_from_formula = tested_case.copy()
+	wrong_case_from_formula = wrong_case.copy()
+	for generated_input in generatedInputs:
+		generated_input_tuple = tuple(generated_input)
+		if generated_input_tuple in tested_case_from_formula:
+			del tested_case_from_formula[generated_input_tuple]
+		if generated_input_tuple in wrong_case_from_formula:
+			del wrong_case_from_formula[generated_input_tuple]
+
 	print('======')
 	print('RESULT')
 	print('======')
 	print('\ntested: ')
 	print(tested_case)
+	print('\ntested from path dev or path eq: ')
+	print(tested_case_from_formula)
 	print('\nwrong: ')
 	print(wrong_case)
+	print('\nwrong from path dev or path eq: ')
+	print(wrong_case_from_formula)
 	print('\ngrade: ')
 	final_grade = (len(tested_case) - len(wrong_case)) / len(tested_case) * 100
 	print(str(final_grade)+'%')
