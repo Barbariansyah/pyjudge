@@ -64,7 +64,7 @@ try:
 	tested_case_from_formula = tested_case.copy()
 	wrong_case_from_formula = wrong_case.copy()
 	for generated_input in generatedInputs:
-		generated_input_tuple = tuple(generated_input)
+		generated_input_tuple = tuple(sorted(generated_input))
 		if generated_input_tuple in tested_case_from_formula:
 			del tested_case_from_formula[generated_input_tuple]
 		if generated_input_tuple in wrong_case_from_formula:
