@@ -1,0 +1,11 @@
+def is_allowed_to_buy_5(soap, mask, sanitizer, face_shield):
+    if soap > 3:
+        return False
+    elif (soap > 0 and sanitizer > 2) or sanitizer > 3:
+        return False
+    elif mask > 4 or (face_shield > 0 and mask > 2):
+        return False
+    elif face_shield > 4 or (face_shield > 2 and mask > 0):
+        return False
+    else:
+        return True
