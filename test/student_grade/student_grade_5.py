@@ -1,4 +1,4 @@
-def student_grade(a):
+def student_grade_5(a):
     if a < 0:
         return "INVALID"
     elif a > 100:
@@ -13,7 +13,5 @@ def student_grade(a):
         return "BC"
     elif 50 <= a and a <= 56:
         return "C"
-    elif 35 <= a and a <= 49:
-        return "D"
     else:
-        return "E"
+        return "D"

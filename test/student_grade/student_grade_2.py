@@ -1,5 +1,5 @@
-def student_grade(a):
-    if a < 0:
+def student_grade_2(a):
+    if a <= 0:
         return "INVALID"
     elif a > 100:
         return "INVALID"

@@ -1,9 +1,5 @@
-def student_grade(a):
-    if a < 0:
-        return "INVALID"
-    elif a > 100:
-        return "INVALID"
-    elif 80 <= a and a <= 100:
+def student_grade_4(a):
+    if 80 <= a and a <= 100:
         return "A"
     elif 73 <= a and a <= 79:
         return "AB"
