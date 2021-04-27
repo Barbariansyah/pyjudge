@@ -53,7 +53,8 @@ python grade.py <reference_implementation>.py <student_implementation>.py
 ...coming soon
 
 ### Limitation
-- can only operates on Integers
+- implementation must be in form of function with return statement
+- function have integer as input
 
 ### Literature
 ...coming soon
