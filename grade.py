@@ -8,6 +8,12 @@ from symbolic.loader import *
 from symbolic.explore import ExplorationEngine
 from symbolic.grader import GradingEngine
 
+def pretty_print(d):
+	print("{")
+	for key, value in d.items():
+		print('    ' + str(key) + ' : ' + str(value) + ',')
+	print("}")
+
 def tracefunc(frame, event, arg, indent=[0]):
       if event == "call":
           indent[0] += 2
@@ -74,13 +80,13 @@ try:
 	print('RESULT')
 	print('======')
 	print('\ntested: ')
-	print(tested_case)
+	pretty_print(tested_case)
 	print('\ntested from path dev or path eq: ')
-	print(tested_case_from_formula)
+	pretty_print(tested_case_from_formula)
 	print('\nwrong: ')
-	print(wrong_case)
+	pretty_print(wrong_case)
 	print('\nwrong from path dev or path eq: ')
-	print(wrong_case_from_formula)
+	pretty_print(wrong_case_from_formula)
 	print('\ngrade: ')
 	final_grade = (len(tested_case) - len(wrong_case)) / len(tested_case) * 100
 	print(str(final_grade)+'%')
