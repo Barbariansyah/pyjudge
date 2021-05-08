@@ -1,4 +1,4 @@
-def segiempat(n):
+def segiempat_6(n):
     ret = ''
     c1 = '*'
     c2 = '#'

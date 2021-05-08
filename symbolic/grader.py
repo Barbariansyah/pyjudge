@@ -54,14 +54,17 @@ class GradingEngine:
 	def grade(self, generated_inputs, execution_return_values):
 		# print(generated_inputs)
 		# print(execution_return_values)
+		# self.print_generated(generated_inputs, execution_return_values)
 		self.default_input = generated_inputs[0][:]
 		for generated_input in generated_inputs:
 			# print('from set: ')
 			pc, pcStudent, ret, retStudent = self.execute_program(generated_input)
 			# if ret.val != retStudent.val:
-			# 	print(ret.val)
-			# 	print(retStudent.val)
-			# 	print('implementation is incorrect')
+			# 	print('\33[41mgen input - implementation is incorrect:\033[0m')
+			# 	print(generated_input)
+			# else:
+			# 	print('gen input')
+			# 	print(generated_input)
 			self.add_to_tested(generated_input, ret, retStudent)
 			pathDeviationForm = self.path_deviation_builder(pc, pcStudent)
 			sat, res = self.z3_solve(pathDeviationForm)
@@ -71,9 +74,13 @@ class GradingEngine:
 			# print('from path dev: ')
 			pc, pcStudent, ret, retStudent = self.execute_program(res)
 			# if ret.val != retStudent.val:
-			# 	print(ret.val)
-			# 	print(retStudent.val)
-			# 	print('implementation is incorrect')
+			# 	print('\33[41mpath dev - implementation is incorrect:\033[0m')
+			# 	print(res)
+			# 	print(pathDeviationForm)
+			# else:
+			# 	print('path dev')
+			# 	print(res)
+			# 	print(pathDeviationForm)
 			self.add_to_tested(res, ret, retStudent)
 			if not isinstance(ret, SymbolicInteger) or not isinstance(retStudent, SymbolicInteger):
 				continue
@@ -87,9 +94,13 @@ class GradingEngine:
 			# print('from path equiv: ')
 			pc, pcStudent, ret, retStudent = self.execute_program(res)
 			# if ret.val != retStudent.val:
-			# 	print(ret.val)
-			# 	print(retStudent.val)
-			# 	print('implementation is incorrect')
+			# 	print('\33[41mpath equivalence - implementation is incorrect\033[0m')
+			# 	print(res)
+			# 	print(pathEquivalenceForm)
+			# else:
+			# 	print('path equivalence')
+			# 	print(res)
+			# 	print(pathEquivalenceForm)
 			self.add_to_tested(res, ret, retStudent)
 		return self.tested_case, self.wrong_case
 	
@@ -103,6 +114,12 @@ class GradingEngine:
 		self.tested_case[tuple(sorted(case))] = (output_ref, output_stud)
 		if output_ref != output_stud:
 			self.wrong_case[tuple(sorted(case))] = (output_ref, output_stud)
+
+	def print_generated(self, gen_inp, gen_out):
+		generated = {}
+		for i in range(len(gen_inp)):
+			generated[tuple(sorted(gen_inp[i]))] = gen_out[i]
+		self._pretty_print(generated)
 	
 	def execute_program(self, sym_inp):
 		# print(sym_inp)
@@ -262,3 +279,9 @@ class GradingEngine:
 		for i in self.path_constraints:
 			print(i)
 			print('---\n')
+
+	def _pretty_print(self, d):
+		print("{")
+		for key, value in d.items():
+			print('    ' + str(key) + ' : ' + str(value) + ',')
+		print("}")
