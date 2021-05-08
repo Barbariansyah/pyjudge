@@ -19,5 +19,3 @@ def segiempat_11(n):
         for i in range(n):
             ret += c1
     return ret
-
-print(segiempat_11(5))
