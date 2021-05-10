@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import traceback
+import json
 from optparse import OptionParser
 
 from symbolic.loader import *
@@ -90,6 +91,11 @@ try:
 	print('\ngrade: ')
 	final_grade = (len(tested_case) - len(wrong_case)) / len(tested_case) * 100
 	print(str(final_grade)+'%')
+	tested_case = {str(k):v for k, v in tested_case.items()}
+	wrong_case = {str(k):v for k, v in wrong_case.items()}
+	resultJson = { 'reference': app.getFile(), 'grading': appStudent.getFile(), 'tested_case': tested_case, 'wrong_case': wrong_case, 'grade': final_grade}
+	with open('res/'+app.getFile()+'-'+appStudent.getFile()+'.json', 'w') as fp:
+		json.dump(resultJson, fp, indent=4)
 	# check the result
 	result = app.executionComplete(returnVals)
 
