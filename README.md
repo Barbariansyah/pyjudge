@@ -16,11 +16,11 @@ This program is the deliverable of my [final project]()
 ```
 . pyjudge/setup.sh
 ```
-4. try grade something
+4. try grading something
 ```
 python grade.py test/max_3.py test/max_3_1.py
 ```
-it should return something like this
+it should return something like this and saved the result to `res` folder
 ```
 Reference: max_3.max_3
 Grading: max_3_1.max_3_1
@@ -47,6 +47,13 @@ grade:
 ## Usage
 ```
 python grade.py <reference_implementation>.py <student_implementation>.py
+```
+
+## Comparing with random input
+One of the goal of exploring this approach is to see if it can cover edge cases where random input generation can't. To see if it does that on a particular problem, try running it with random input generation and compare the result.
+
+```
+python random_grade.py <reference_implementation>.py <student_implementation>.py
 ```
 
 ### How does it do that?
