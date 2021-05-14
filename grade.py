@@ -93,7 +93,7 @@ try:
 	print(str(final_grade)+'%')
 	tested_case = {str(k):v for k, v in tested_case.items()}
 	wrong_case = {str(k):v for k, v in wrong_case.items()}
-	resultJson = { 'reference': app.getFile(), 'grading': appStudent.getFile(), 'tested_case': tested_case, 'wrong_case': wrong_case, 'grade': final_grade}
+	resultJson = { 'reference': app.getFile(), 'grading': appStudent.getFile(), 'grade': final_grade, 'tested_case': tested_case, 'wrong_case': wrong_case}
 	with open('res/'+app.getFile()+'-'+appStudent.getFile()+'.json', 'w') as fp:
 		json.dump(resultJson, fp, indent=4)
 	# check the result
