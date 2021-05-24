@@ -6,6 +6,6 @@ def arithmetic_seq_4(n):
     while i <= n:
         ret += i
         i += 1
-        if i == 2:
+        if i == 8:
             break
     return ret

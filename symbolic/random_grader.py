@@ -16,7 +16,7 @@ class RandomGradingEngine:
 
     def randomize_inputs(self):
         for arg in self.funcinv.getNames():
-            self.inputs[arg] = random.randint(-10,10)
+            self.inputs[arg] = random.randint(-10,120)
     
     def grade(self):
         for i in range(20):
