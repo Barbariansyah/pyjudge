@@ -7,7 +7,7 @@ PyJudge is an automatic grading tools that takes a reference implementation and 
 
 This code used and is a modified version of [PyExZ3](https://github.com/thomasjball/PyExZ3) that is a Dynamic Symbolic Execution Engine for Python
 
-This program is the deliverable of my [final project]()
+This program is the deliverable of my [final project](https://drive.google.com/file/d/1UtX47PFaLpUXQhVJggxiudqUaKmhyybi/view?usp=sharing)
 
 ## Getting Started
 1. Make sure you have Python 3.x installed
@@ -57,11 +57,9 @@ python random_grade.py <reference_implementation>.py <student_implementation>.py
 ```
 
 ### How does it do that?
-...coming soon
-
 ### Limitation
-- implementation must be in form of function with return statement
+- implementation must be in the form of function with return statement
 - function have integer as input
 
 ### Literature
-...coming soon
+[link to paper](https://drive.google.com/file/d/1UtX47PFaLpUXQhVJggxiudqUaKmhyybi/view?usp=sharing)
